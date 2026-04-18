@@ -1,0 +1,80 @@
+﻿{
+  "cases": [
+    {
+      "id": "CASE-PASS-001",
+      "name": "营业执照初审核验通过",
+      "input": {
+        "session_id": "S-PASS-001",
+        "work_order_id": "WO-PASS-001",
+        "message": "营业执照初审核验企业名称一致性",
+        "user_id": "U-HARNESS"
+      },
+      "context": {
+        "feature_enable_writeback": false,
+        "max_analysis_attempts": 2
+      },
+      "expectations": {
+        "route": "pass",
+        "must_include_evidence_refs": true,
+        "max_latency_ms": 5000
+      }
+    },
+    {
+      "id": "CASE-DEGRADE-001",
+      "name": "合规风险复审降级处理",
+      "input": {
+        "session_id": "S-DEGRADE-001",
+        "work_order_id": "WO-DEGRADE-001",
+        "message": "合规风险复审违规检查",
+        "user_id": "U-HARNESS"
+      },
+      "context": {
+        "feature_enable_writeback": false,
+        "max_analysis_attempts": 2
+      },
+      "expectations": {
+        "route": "degrade",
+        "must_include_evidence_refs": true,
+        "max_latency_ms": 5000
+      }
+    },
+    {
+      "id": "CASE-REJECT-001",
+      "name": "高风险复核直接拒绝",
+      "input": {
+        "session_id": "S-REJECT-001",
+        "work_order_id": "WO-REJECT-001",
+        "message": "合规风险复核证照检查",
+        "user_id": "U-HARNESS"
+      },
+      "context": {
+        "feature_enable_writeback": false,
+        "max_analysis_attempts": 2
+      },
+      "expectations": {
+        "route": "reject",
+        "must_include_evidence_refs": true,
+        "max_latency_ms": 5000
+      }
+    },
+    {
+      "id": "CASE-HUMAN-001",
+      "name": "双路空召回转人工复核",
+      "input": {
+        "session_id": "S-HUMAN-001",
+        "work_order_id": "WO-HUMAN-001",
+        "message": "xqzv-unknown-query",
+        "user_id": "U-HARNESS"
+      },
+      "context": {
+        "feature_enable_writeback": false,
+        "max_analysis_attempts": 1
+      },
+      "expectations": {
+        "route": "human_review",
+        "must_include_evidence_refs": false,
+        "max_latency_ms": 5000
+      }
+    }
+  ]
+}

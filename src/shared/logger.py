@@ -1,3 +1,7 @@
+# Time: 2026-04-18 15:50
+# Description: 配置带 trace_id 上下文的 JSON 日志输出。
+# Author: Feixue
+
 from __future__ import annotations
 
 import json
@@ -11,6 +15,8 @@ _LOGGING_READY = False
 
 
 class TraceContextFilter(logging.Filter):
+    """向日志记录注入 trace_id 与扩展字段容器。"""
+
     def filter(self, record: logging.LogRecord) -> bool:
         record.trace_id = get_trace_id() or "-"
         if not hasattr(record, "extra_fields"):
@@ -19,6 +25,8 @@ class TraceContextFilter(logging.Filter):
 
 
 class JsonFormatter(logging.Formatter):
+    """将日志格式化为统一 JSON 结构。"""
+
     def format(self, record: logging.LogRecord) -> str:
         payload: dict[str, Any] = {
             "timestamp": datetime.now(tz=timezone.utc).isoformat(),
@@ -32,10 +40,11 @@ class JsonFormatter(logging.Formatter):
             payload.update(extra_fields)
         if record.exc_info:
             payload["exception"] = self.formatException(record.exc_info)
-        return json.dumps(payload, ensure_ascii=True)
+        return json.dumps(payload, ensure_ascii=False)
 
 
 def configure_logging(level: str = "INFO") -> None:
+    """初始化根日志器。重复调用时保持幂等。"""
     global _LOGGING_READY
     if _LOGGING_READY:
         return
@@ -52,4 +61,5 @@ def configure_logging(level: str = "INFO") -> None:
 
 
 def get_logger(name: str) -> logging.Logger:
+    """获取具名日志器。"""
     return logging.getLogger(name)

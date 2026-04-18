@@ -1,3 +1,7 @@
+# Time: 2026-04-18 15:50
+# Description: 校验 /health 接口的状态与 trace_id 字段。
+# Author: Feixue
+
 from __future__ import annotations
 
 
